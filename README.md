@@ -50,6 +50,55 @@ class HttpsApp extends React.Component {
 }
 ```
 
+To disable in other environments apart from local, use https://serverless-stack.com/chapters/environments-in-create-react-app.html and 
+
+```javascript
+const dev = {
+  apiGateway: {
+    URL: "api-dev.example.com"
+  },
+  httpsRedirectDisabled: true,
+};
+
+const prod = {
+  apiGateway: {
+    URL: "api.example.com"
+  },
+  httpsRedirectDisabled: false,
+};
+
+const config = process.env.REACT_APP_STAGE === 'production'
+  ? prod
+  : dev;
+
+export default {
+  ...config
+};
+```
+
+```javascript
+import HttpsRedirect from 'react-https-redirect';
+
+import config from './config/config.js';
+
+// you can just wrap your entire app to redirect it to the equivalent https version
+// for example:
+// http://example.com/    =>    https://example.com/
+
+// you can also use a "disabled" prop to dinamically disable it
+// <HttpsRedirect disabled={...}>
+
+class HttpsApp extends React.Component {
+
+  render() {
+    return (
+      <HttpsRedirect disabled={config.httpsRedirectDisabled}>
+        <App />
+      <HttpsRedirect/>
+    );
+  }
+}
+```
 
 ## Author
 **Matteo Basso**
